@@ -1,6 +1,10 @@
 const axios = require('axios')
 
 exports.handler = async (event) => {
+  await getNYTList()
+}
+
+async function getNYTList () {
   const nytBookRootUrl = 'https://api.nytimes.com/svc/books/v3/lists/current'
   const fictionPath = '/combined-print-and-e-book-fiction.json'
   // const nonFictionPath = '/combined-print-and-e-book-nonfiction.json'
@@ -14,6 +18,7 @@ exports.handler = async (event) => {
     console.log(response.data.results.books)
   })
   .catch(function (error) {
+    // Add error handling at some point
     console.log(error)
   })
-};
+}
