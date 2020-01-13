@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'Example SAM stack'
+Resources:
+  WeeklyBestSellerUpdate:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs8.10
+      # Any env variables you want to use must be defined here (and then their values can be overridden in env.json)
+      Environment:
+        Variables:
+          NYT_API_KEY:
