@@ -1,4 +1,6 @@
 const axios = require('axios')
+const AWS = require("aws-sdk");
+const dynamo = new AWS.DynamoDB.DocumentClient()
 
 exports.handler = async (event) => {
   const nytList = await getNytList().catch((error) => {
