@@ -19,6 +19,10 @@ It gets the New York Times bestseller list, and sends an email about any new boo
 3. Go to the `Debug and Run` tab in VSCode, and click the play button (`Start debugging`).
 4. You can debug in the Debug Console.
 
+### Gotchas
+* Make sure the Docker desktop is running.
+* If you get this error, restart the Docker desktop. `Could not invoke function: Error response from daemon: driver failed programming external connectivity on endpoint: Bind for 0.0.0.0:5678 failed: port is already allocated`
+
 ### References
 * https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-using-debugging-nodejs.html
 * https://github.com/aws/aws-toolkit-vscode/blob/master/docs/debugging-nodejs-lambda-functions.md
