@@ -7,6 +7,9 @@ Resources:
     Properties:
       Handler: index.handler
       Runtime: nodejs8.10
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref weekly-bestseller-updates
       # Any env variables you want to use must be defined here (and then their values can be overridden in env.json)
       Environment:
         Variables:
