@@ -1,0 +1,23 @@
+{
+  "name": "weekly-bestseller-update",
+  "version": "1.0.0",
+  "description": "This project is meant to be executed as an AWS lambda. It gets the New York Times bestseller list, and sends an email about any new books that made the ranking.",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.19.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/risafj/weekly-bestseller-update.git"
+  },
+  "author": "Risa Fujii",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/risafj/weekly-bestseller-update/issues"
+  },
+  "homepage": "https://github.com/risafj/weekly-bestseller-update#readme"
+}
