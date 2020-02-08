@@ -6,8 +6,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      Runtime: nodejs8.10
+      Runtime: nodejs12.x
       # Any env variables you want to use must be defined here (and then their values can be overridden in env.json)
       Environment:
         Variables:
-          NYT_API_KEY:
+          NYT_API_KEY: "USE_THE_ACTUAL_API_KEY"
