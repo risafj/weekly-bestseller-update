@@ -26,3 +26,10 @@ It gets the New York Times bestseller list, and sends an email about any new boo
 ### References
 * https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-using-debugging-nodejs.html
 * https://github.com/aws/aws-toolkit-vscode/blob/master/docs/debugging-nodejs-lambda-functions.md
+
+## How to build and deploy the Lambda
+* Build: `sam build`
+  * This will create/update the folder named `.aws-sam`. This is the folder that gets executed locally, and the folder that gets uploaded to AWS when you deploy.
+* Deploy: `AWS_PROFILE=<profile name> sam deploy --guided`
+  * This will prompt you with the necessary options for deploying the Lambda. Remember, if you have multiple AWS profiles in the credentials, set the correct one in the env var `AWS_PROFILE`.
+  * The `--guided` flag is only be necessary the first time.
