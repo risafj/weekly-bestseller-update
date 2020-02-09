@@ -11,3 +11,6 @@ Resources:
       Environment:
         Variables:
           NYT_API_KEY: "USE_THE_ACTUAL_API_KEY"
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName: weekly-bestseller-updates
