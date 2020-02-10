@@ -10,12 +10,15 @@ It gets the New York Times bestseller list, and sends an email about any new boo
 
 ## How to execute the Lambda locally
 1. Make sure Docker is running.
-2. `echo '{"message": "Invoked" }' | sam local invoke WeeklyBestSellerUpdate --env-vars env.json`
+2. `echo '{"message": "Invoked" }' | sam local invoke WeeklyBestSellerUpdate --env-vars env.json --profile <profile name>`
+
+### Gotchas
+* The lambda can be executed without the profile, but accessing AWS resources (like DynamoDB) may not work because it doesn't know which profile to use.
 
 ## How to debug the Lambda locally
 1. Create a breakpoint in the code by clicking next to the line number (a red dot should appear).
 2. Execute the lambda locally, but with the debug port specified.
-`echo '{"message": "Invoked" }' | sam local invoke WeeklyBestSellerUpdate --env-vars env.json -d 5678`
+`echo '{"message": "Invoked" }' | sam local invoke WeeklyBestSellerUpdate --env-vars env.json -d 5678 --profile <profile name>`
 3. Go to the `Debug and Run` tab in VSCode, and click the play button (`Start debugging`).
 4. You can debug in the Debug Console.
 
@@ -30,6 +33,5 @@ It gets the New York Times bestseller list, and sends an email about any new boo
 ## How to build and deploy the Lambda
 * Build: `sam build`
   * This will create/update the folder named `.aws-sam`. This is the folder that gets executed locally, and the folder that gets uploaded to AWS when you deploy.
-* Deploy: `AWS_PROFILE=<profile name> sam deploy --guided`
-  * This will prompt you with the necessary options for deploying the Lambda. Remember, if you have multiple AWS profiles in the credentials, set the correct one in the env var `AWS_PROFILE`.
-  * The `--guided` flag is only be necessary the first time.
+* Deploy: `sam deploy --profile <profile name>`
+  * The `--guided` flag is necessary when deploying for the first time (it will prompt you with the necessary options for deployment).
