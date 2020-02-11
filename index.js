@@ -1,6 +1,6 @@
 const axios = require('axios')
 const AWS = require('aws-sdk')
-AWS.config.update({region: 'ap-northeast-1'});
+AWS.config.update({ region: 'ap-northeast-1' })
 const dynamo = new AWS.DynamoDB.DocumentClient()
 
 exports.handler = async (event) => {
@@ -22,11 +22,11 @@ exports.handler = async (event) => {
   console.log(scanResult)
 }
 
-async function getNytList() {
+async function getNytList () {
   const nytBookRootUrl = 'https://api.nytimes.com/svc/books/v3/lists/current'
   const fictionPath = '/combined-print-and-e-book-fiction.json'
   // const nonFictionPath = '/combined-print-and-e-book-nonfiction.json'
-  const params = {'api-key': process.env.NYT_API_KEY }
+  const params = { 'api-key': process.env.NYT_API_KEY }
 
   return axios.get(
     nytBookRootUrl + fictionPath,
