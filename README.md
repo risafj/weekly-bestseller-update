@@ -24,7 +24,7 @@ $ echo '{"message": "Invoked" }' | sam local invoke WeeklyBestSellerUpdate --env
 
 ### Debugging locally
 1. Create a breakpoint in the code by clicking left of the line number (a red dot should appear).
-2. Execute the lambda locally, but with the debug port specified: `-d 5678 --profile <profile name>`
+2. Execute the lambda locally, but with the debug port specified: `-d 5678`
 3. Go to the `Debug and Run` tab in VSCode, and click the play button (`Start debugging`).
 4. You can debug in the Debug Console.
 
@@ -66,8 +66,8 @@ $ export LOCAL="--endpoint-url http://localhost:8000"
 $ aws dynamodb create-table $LOCAL \
 --table-name 'weekly-bestseller-updates' \
 --attribute-definitions AttributeName=email,AttributeType=S \
---key-schema AttributeName=email, KeyType=HASH \
---provisioned-throughput ReadCapacityUnits=5, WriteCapacityUnits=5
+--key-schema AttributeName=email,KeyType=HASH \
+--provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
 ```
 
 #### Caveats
