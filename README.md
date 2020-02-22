@@ -70,14 +70,16 @@ $ aws dynamodb create-table $LOCAL \
 --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
 ```
 
+### 3. Add an item to the table
+```bash
+aws dynamodb put-item $LOCAL \
+--table-name 'weekly-bestseller-updates' \
+--item '{"email": {"S": "test@email.com"}, "books": {"SS": ["Becoming", "Educated"]}}'
+```
+
 #### Caveats
 * All data in the local DB is cleared every time it is shut down.
 * The only options for `AttributeType` when creating a table are S/N/B (String, Number or Binary). You can create the list column later when you populate the table with data ([further explanation](https://stackoverflow.com/a/48809570/11249670)).
-
-### How to get the list of tables
-```bash
-$ aws dynamodb list-tables $LOCAL
-```
 
 #### References
 * https://stackoverflow.com/questions/48926260/connecting-aws-sam-local-with-dynamodb-in-docker
