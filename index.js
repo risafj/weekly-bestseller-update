@@ -17,10 +17,7 @@ exports.handler = async (event) => {
     console.log(nytList)
   }
 
-  const scanParams = {
-    TableName: 'weekly-bestseller-updates'
-  }
-  const scanResult = await dynamo.scan(scanParams).promise().catch((error) => {
+  const scanResult = await scanDynamoTable().catch((error) => {
     console.log(`Scan error: ${error}`)
   })
 
@@ -37,4 +34,11 @@ async function getNytList () {
     nytBookRootUrl + fictionPath,
     { params: params }
   )
+}
+
+async function scanDynamoTable () {
+  const scanParams = {
+    TableName: 'weekly-bestseller-updates'
+  }
+  return dynamo.scan(scanParams).promise()
 }
