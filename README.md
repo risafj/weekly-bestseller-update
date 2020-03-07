@@ -72,7 +72,7 @@ $ aws dynamodb create-table $LOCAL \
 
 ### 3. Add an item to the table
 ```bash
-aws dynamodb put-item $LOCAL \
+$ aws dynamodb put-item $LOCAL \
 --table-name 'weekly-bestseller-updates' \
 --item '{"email": {"S": "test@email.com"}, "books": {"SS": ["Becoming", "Educated"]}}'
 ```
