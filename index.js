@@ -1,6 +1,6 @@
 const axios = require('axios')
 const AWS = require('aws-sdk')
-const options = { region: 'ap-northeast-1' }
+const options = { region: 'us-east-1' }
 AWS.config.update(options)
 
 if (process.env.AWS_SAM_LOCAL) {
