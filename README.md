@@ -47,34 +47,25 @@ $ echo '{"message": "Invoked" }' | sam local invoke WeeklyBestSellerUpdate --env
 If you don't want to hit the production DB, you can use DynamoDB Local instead (run inside a Docker container).
 
 ### 1. Start the DynamoDB Local container
-```bash
-$ docker run -p 8000:8000 amazon/dynamodb-local
+I have modified the default `amazon/dynamodb-local` container slightly to use sharedDb (lets you ignore the region).
+The modified container can be built and run as below.
+1. Build: `docker build -t my-dynamodb-local -f dynamodb.Dockerfile --no-cache=true .`
+2. Run: `docker run -p 8000:8000 my-dynamodb-local`
 
-# Should return something like this
-Initializing DynamoDB Local with the following configuration:
-Port:	8000
-InMemory:	true
-DbPath:	null
-SharedDb:	false
-shouldDelayTransientStatuses:	false
-CorsParams:	*
-```
-### 2. In a different terminal window, create a test DB
+### 2. In a different terminal window, create a test DB and add data
+1. `export LOCAL="--endpoint-url http://localhost:8000"`
+2. `export TABLE="--table-name weekly-bestseller-updates"`
+3. Create table
 ```bash
-$ export LOCAL="--endpoint-url http://localhost:8000"
-
-$ aws dynamodb create-table $LOCAL \
---table-name 'weekly-bestseller-updates' \
+aws dynamodb create-table $LOCAL $TABLE \
 --attribute-definitions AttributeName=email,AttributeType=S \
 --key-schema AttributeName=email,KeyType=HASH \
 --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
 ```
-
-### 3. Add an item to the table
+4. Add data
 ```bash
-$ aws dynamodb put-item $LOCAL \
---table-name 'weekly-bestseller-updates' \
---item '{"email": {"S": "test@email.com"}, "books": {"SS": ["Becoming", "Educated"]}}'
+aws dynamodb put-item $LOCAL $TABLE \
+--item '{"email": {"S": "test@email.com"}}'
 ```
 
 #### Caveats
