@@ -27,7 +27,7 @@ exports.handler = async (event) => {
   console.log('Done')
 }
 
-async function getNytList () {
+function getNytList () {
   const nytBookRootUrl = 'https://api.nytimes.com/svc/books/v3/lists/current'
   const fictionPath = '/combined-print-and-e-book-fiction.json'
   const params = { 'api-key': process.env.NYT_API_KEY }
@@ -38,7 +38,7 @@ async function getNytList () {
   )
 }
 
-async function scanDynamoTable () {
+function scanDynamoTable () {
   const scanParams = {
     TableName: process.env.DYNAMO_TABLE_NAME
   }
