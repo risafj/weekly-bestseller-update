@@ -11,14 +11,13 @@ if (process.env.AWS_SAM_LOCAL) {
 const dynamo = new AWS.DynamoDB.DocumentClient(options)
 
 exports.handler = async (event) => {
-  const nytList = await getNytList().catch((error) => {
-    console.log(`NYT error: ${error}`)
-  })
-  const nytIsbns = nytList.data.results.books.map(book => book.primary_isbn13)
-
-  const userTable = await scanDynamoTable().catch((error) => {
-    console.log(`Scan error: ${error}`)
-  })
+  try {
+    var nytList = await getNytList()
+    var nytIsbns = nytList.data.results.books.map(book => book.primary_isbn13)
+    var userTable = await scanDynamoTable()
+  } catch (e) {
+    console.log(e.message)
+  }
 
   // Using a for loop because forEach does not work well with async.
   for (let i = 0; i < userTable.Items.length; i++) {
