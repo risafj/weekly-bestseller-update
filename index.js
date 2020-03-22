@@ -128,6 +128,7 @@ function updateTable (email, newFictionIsbns, newNonfictionIsbns) {
       email: email
     }
   }
+  // NOTE: Building the params this way because calling createSet on an empty array returns an error.
   if (newFictionIsbns.length !== 0 && newNonfictionIsbns.length !== 0) {
     updateParams.UpdateExpression = 'ADD fiction :fiction, nonfiction :nonfiction'
     updateParams.ExpressionAttributeValues = {
