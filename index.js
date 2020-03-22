@@ -91,6 +91,7 @@ function emailContent (newIsbns, nytList) {
     const book = nytList.data.results.books.find(book => book.primary_isbn13 === isbn)
     emailContent = emailContent.concat(`
     <h2> # ${book.rank} ${book.title} by ${book.author} </h2>
+    <img src="${book.book_image}" width="200"><br />
     ${book.description}<br />
     Check out on <a href="${book.buy_links.find((linkItem) => linkItem.name === 'Amazon').url}">Amazon</a> / <a href="https://www.goodreads.com/book/isbn/${isbn}">Goodreads</a>
     `)
