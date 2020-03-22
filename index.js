@@ -56,7 +56,7 @@ function scanDynamoTable () {
 }
 
 function newIsbnsForUser (user, nytIsbns) {
-  if (user.books && user.books.valueslength !== 0) {
+  if (user.books && user.books.values.length !== 0) {
     return nytIsbns.filter(i => !user.books.values.includes(i))
   } else {
     return nytIsbns
