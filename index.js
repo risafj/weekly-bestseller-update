@@ -28,7 +28,7 @@ exports.handler = async (event) => {
     }
 
     try {
-      await emailUser(user.email, newIsbns)
+      await emailUser(user.email, emailContent(newIsbns, nytList))
       await updateTable(user.email, newIsbns)
     } catch (e) {
       console.log(`Error: ${e.message}`)
@@ -63,7 +63,7 @@ function newIsbnsForUser (user, nytIsbns) {
   }
 }
 
-function emailUser (email, newIsbns) {
+function emailUser (email, emailContent) {
   const params = {
     Destination: {
       ToAddresses: [email]
@@ -71,17 +71,31 @@ function emailUser (email, newIsbns) {
     Source: process.env.SOURCE_EMAIL_ADDRESS,
     Message: {
       Subject: {
-        Data: 'Your weekly bestselling books update'
+        Data: 'Your weekly bestsellers update'
       },
       Body: {
-        Text: {
-          Data: `Here are the books newly listed ${newIsbns}`
+        Html: {
+          Data: emailContent,
+          Charset: 'UTF-8'
         }
       }
     }
   }
   console.log(`About to send email to ${email}`)
   return ses.sendEmail(params).promise()
+}
+
+function emailContent (newIsbns, nytList) {
+  var emailContent = '<h1>Your weekly bestsellers update</h1><br />'
+  for (const isbn of newIsbns) {
+    const book = nytList.data.results.books.find(book => book.primary_isbn13 === isbn)
+    emailContent = emailContent.concat(`
+    <h2> # ${book.rank} ${book.title} by ${book.author} </h2>
+    ${book.description}<br />
+    Check out on <a href="${book.buy_links.find((linkItem) => linkItem.name === 'Amazon').url}">Amazon</a>
+    `)
+  }
+  return emailContent
 }
 
 function updateTable (email, newIsbns) {
