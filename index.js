@@ -64,6 +64,8 @@ function newIsbnsForUser (user, nytIsbns) {
 }
 
 function emailUser (email, emailContent) {
+  const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+
   const params = {
     Destination: {
       ToAddresses: [email]
@@ -71,7 +73,7 @@ function emailUser (email, emailContent) {
     Source: process.env.SOURCE_EMAIL_ADDRESS,
     Message: {
       Subject: {
-        Data: 'Your weekly bestsellers update'
+        Data: `Your weekly bestsellers update (${date})`
       },
       Body: {
         Html: {
@@ -87,6 +89,7 @@ function emailUser (email, emailContent) {
 
 function emailContent (newIsbns, nytList) {
   var emailContent = '<h1>Your weekly bestsellers update</h1><br />'
+
   for (const isbn of newIsbns) {
     const book = nytList.data.results.books.find(book => book.primary_isbn13 === isbn)
     emailContent = emailContent.concat(`
