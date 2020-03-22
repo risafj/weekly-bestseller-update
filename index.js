@@ -19,9 +19,7 @@ exports.handler = async (event) => {
     console.log(e.message)
   }
 
-  // Using a for loop because forEach does not work well with async.
-  for (let i = 0; i < userTable.Items.length; i++) {
-    const user = userTable.Items[i]
+  for (const user of userTable.Items) {
     const newIsbns = newIsbnsForUser(user, nytIsbns)
 
     if (newIsbns.length === 0) {
