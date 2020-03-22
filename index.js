@@ -12,24 +12,30 @@ const dynamo = new AWS.DynamoDB.DocumentClient(options)
 
 exports.handler = async (event) => {
   try {
-    var nytList = await getNytList()
-    var nytIsbns = nytList.data.results.books.map(book => book.primary_isbn13)
+    var nytFictionList = await getNytList('/combined-print-and-e-book-fiction.json')
+    var nytNonfictionList = await getNytList('/combined-print-and-e-book-nonfiction.json')
+    var nytFictionIsbns = nytFictionList.data.results.books.map(book => book.primary_isbn13)
+    var nytNonfictionIsbns = nytNonfictionList.data.results.books.map(book => book.primary_isbn13)
+
     var userTable = await scanDynamoTable()
   } catch (e) {
     console.log(e.message)
   }
 
   for (const user of userTable.Items) {
-    const newIsbns = newIsbnsForUser(user, nytIsbns)
+    var newFictionIsbns = []
+    var newNonfictionIsbns = []
+    newFictionIsbns = newIsbnsForUser(user.fiction, nytFictionIsbns, user)
+    newNonfictionIsbns = newIsbnsForUser(user.nonfiction, nytNonfictionIsbns, user)
 
-    if (newIsbns.length === 0) {
+    if (newFictionIsbns.length === 0 && newNonfictionIsbns.length === 0) {
       console.log(`Skipping because there are no new books to send for user ${user.email}`)
       continue
     }
 
     try {
-      await emailUser(user.email, emailContent(newIsbns, nytList))
-      await updateTable(user.email, newIsbns)
+      await emailUser(user.email, emailContent(newFictionIsbns, nytFictionList, newNonfictionIsbns, nytNonfictionList))
+      await updateTable(user.email, newFictionIsbns, newNonfictionIsbns)
     } catch (e) {
       console.log(`Error: ${e.message}`)
     }
@@ -37,13 +43,12 @@ exports.handler = async (event) => {
   console.log('Done')
 }
 
-function getNytList () {
+function getNytList (path) {
   const nytBookRootUrl = 'https://api.nytimes.com/svc/books/v3/lists/current'
-  const fictionPath = '/combined-print-and-e-book-fiction.json'
   const params = { 'api-key': process.env.NYT_API_KEY }
 
   return axios.get(
-    nytBookRootUrl + fictionPath,
+    nytBookRootUrl + path,
     { params: params }
   )
 }
@@ -55,9 +60,9 @@ function scanDynamoTable () {
   return dynamo.scan(scanParams).promise()
 }
 
-function newIsbnsForUser (user, nytIsbns) {
-  if (user.books && user.books.values.length !== 0) {
-    return nytIsbns.filter(i => !user.books.values.includes(i))
+function newIsbnsForUser (userIsbns, nytIsbns, user) {
+  if (!!userIsbns && userIsbns.length !== 0) {
+    return nytIsbns.filter(i => !userIsbns.includes(i))
   } else {
     return nytIsbns
   }
@@ -87,31 +92,55 @@ function emailUser (email, emailContent) {
   return ses.sendEmail(params).promise()
 }
 
-function emailContent (newIsbns, nytList) {
+function emailContent (newFictionIsbns, nytFictionList, newNonfictionIsbns, nytNonfictionList) {
   var emailContent = '<h1>Your weekly bestsellers update</h1><br />'
+
+  if (newFictionIsbns.length !== 0) {
+    emailContent = emailContent.concat('<h2>Fiction</h2>')
+    emailContent = emailContent.concat(bookListForCategory(newFictionIsbns, nytFictionList))
+  }
+  if (newNonfictionIsbns.length !== 0) {
+    emailContent = emailContent.concat('<h2>Nonfiction</h2>')
+    emailContent = emailContent.concat(bookListForCategory(newNonfictionIsbns, nytNonfictionList))
+  }
+  return emailContent
+}
+
+function bookListForCategory (newIsbns, nytList) {
+  var bookListForCategory = ''
 
   for (const isbn of newIsbns) {
     const book = nytList.data.results.books.find(book => book.primary_isbn13 === isbn)
-    emailContent = emailContent.concat(`
-    <h2> # ${book.rank} ${book.title} by ${book.author} </h2>
+    bookListForCategory = bookListForCategory.concat(`
+    <h3> # ${book.rank} ${book.title} by ${book.author} </h3>
     <img src="${book.book_image}" width="200"><br />
     ${book.description}<br />
     Check out on <a href="${book.buy_links.find((linkItem) => linkItem.name === 'Amazon').url}">Amazon</a> / <a href="https://www.goodreads.com/book/isbn/${isbn}">Goodreads</a>
     `)
   }
-  return emailContent
+  return bookListForCategory
 }
 
-function updateTable (email, newIsbns) {
-  const updateParams = {
+function updateTable (email, newFictionIsbns, newNonfictionIsbns) {
+  var updateParams = {
     TableName: process.env.DYNAMO_TABLE_NAME,
     Key: {
       email: email
-    },
-    UpdateExpression: 'ADD books :new_books',
-    ExpressionAttributeValues: {
-      ':new_books': dynamo.createSet(newIsbns)
     }
+  }
+  // NOTE: Building the params this way because calling createSet on an empty array returns an error.
+  if (newFictionIsbns.length !== 0 && newNonfictionIsbns.length !== 0) {
+    updateParams.UpdateExpression = 'ADD fiction :fiction, nonfiction :nonfiction'
+    updateParams.ExpressionAttributeValues = {
+      ':fiction': dynamo.createSet(newFictionIsbns),
+      ':nonfiction': dynamo.createSet(newNonfictionIsbns)
+    }
+  } else if (newFictionIsbns.length !== 0) {
+    updateParams.UpdateExpression = 'ADD fiction :fiction'
+    updateParams.ExpressionAttributeValues = { ':fiction': dynamo.createSet(newFictionIsbns) }
+  } else if (newNonfictionIsbns.length !== 0) {
+    updateParams.UpdateExpression = 'ADD nonfiction :nonfiction'
+    updateParams.ExpressionAttributeValues = { ':nonfiction': dynamo.createSet(newNonfictionIsbns) }
   }
 
   console.log(`About to update table for user ${email}`)
