@@ -61,8 +61,8 @@ function scanDynamoTable () {
 }
 
 function newIsbnsForUser (userIsbns, nytIsbns, user) {
-  if (!!userIsbns && userIsbns.length !== 0) {
-    return nytIsbns.filter(i => !userIsbns.includes(i))
+  if (!!userIsbns && userIsbns.values.length !== 0) {
+    return nytIsbns.filter(i => !userIsbns.values.includes(i))
   } else {
     return nytIsbns
   }
