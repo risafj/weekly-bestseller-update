@@ -15,7 +15,7 @@ It gets the New York Times bestseller list, and sends users an email about any n
 ## Executing locally
 ### Base command (with environment variables loaded)
 ```bash
-$ echo '{"message": "Invoked" }' | sam local invoke WeeklyBestSellerUpdate --env-vars env.json
+$ sam local invoke WeeklyBestSellerUpdate --env-vars env.json --no-event
 ```
 
 ### Options
