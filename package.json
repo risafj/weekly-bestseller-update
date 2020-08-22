@@ -4,7 +4,7 @@
   "description": "This project is meant to be executed as an AWS lambda. It gets the New York Times bestseller list, and sends an email about any new books that made the ranking.",
   "main": "index.js",
   "dependencies": {
-    "axios": "^0.19.2"
+    "axios": "^0.20.0"
   },
   "devDependencies": {
     "standard": "^14.3.4"
