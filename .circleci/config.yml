@@ -3,13 +3,23 @@ version: 2.1
 executors:
   yarn_pr_creator:
     docker:
-      - image: renovate/renovate
+      - image: cimg/base:stable
+
+commands:
+  update_packages:
+    steps:
+      - run:
+          name: Raise PRs for package updates
+          command: |
+            docker run -e RENOVATE_TOKEN=${RENOVATE_TOKEN} renovate/renovate --platform=github --log-level=debug risafj/weekly-bestseller-update
 
 jobs:
   yarn_upgrade_pr:
     executor: yarn_pr_creator
     steps:
       - checkout
+      - setup_remote_docker
+      - update_packages
 
 workflows:
   version: 2
@@ -20,7 +30,7 @@ workflows:
           filters:
             branches:
               only:
-                - renovate
+                - master
 
     jobs:
       - yarn_upgrade_pr
