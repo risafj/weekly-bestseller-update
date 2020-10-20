@@ -3,7 +3,7 @@ version: 2.1
 executors:
   yarn_pr_creator:
     docker:
-      - image: docker:17.05.0-ce-git
+      - image: docker:17.12.1-ce-git
 
 commands:
   update_packages:
