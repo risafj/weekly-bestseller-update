@@ -18,6 +18,7 @@ jobs:
     executor: yarn_pr_creator
     steps:
       - checkout
+      - setup_remote_docker
       - update_packages
 
 workflows:
