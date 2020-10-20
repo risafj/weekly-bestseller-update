@@ -3,7 +3,7 @@ version: 2.1
 executors:
   yarn_pr_creator:
     docker:
-      - image: cimg/base
+      - image: circleci/node
 
 commands:
   update_packages:
