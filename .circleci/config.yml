@@ -1,0 +1,26 @@
+version: 2.1
+
+executors:
+  yarn_pr_creator:
+    docker:
+      - image: renovate/renovate
+
+jobs:
+  yarn_upgrade_pr:
+    executor: yarn_pr_creator
+    steps:
+      - checkout
+
+workflows:
+  version: 2
+  yarn_upgrade_pr:
+    triggers:
+      - schedule:
+          cron: "* * * * *"
+          filters:
+            branches:
+              only:
+                - renovate
+
+    jobs:
+      - yarn_upgrade_pr
