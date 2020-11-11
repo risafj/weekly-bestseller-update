@@ -23,7 +23,7 @@ jobs:
 
 workflows:
   version: 2
-  yarn_upgrade_pr:
+  scheduled_yarn_upgrade_pr:
     triggers:
       - schedule:
           cron: 00 0 * * * # 毎日 朝9:00
@@ -34,3 +34,10 @@ workflows:
 
     jobs:
       - yarn_upgrade_pr
+  trigger_rebase_npm_upgrade:
+    jobs:
+      - yarn_upgrade_pr:
+          filters:
+            branches:
+              only:
+                - master
