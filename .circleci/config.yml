@@ -34,10 +34,3 @@ workflows:
 
     jobs:
       - yarn_upgrade_pr
-  trigger_rebase_npm_upgrade:
-    jobs:
-      - yarn_upgrade_pr:
-          filters:
-            branches:
-              only:
-                - master

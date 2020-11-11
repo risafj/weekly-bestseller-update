@@ -4,7 +4,7 @@
     "helpers:disableTypesNodeMajor"
   ],
   "baseBranches": ["master"],
-  "schedule": "at any time",
+  "schedule": "after 9:30am and before 6:30pm on Saturday",
   "enabledManagers": ["npm"],
   "rebaseWhen": "behind-base-branch",
   "patch": {
