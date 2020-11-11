@@ -1,3 +1,15 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json"
+  "extends": [
+    "config:base",
+    "helpers:disableTypesNodeMajor"
+  ],
+  "baseBranches": ["master"],
+  "schedule": "at any time",
+  "enabledManagers": ["npm"],
+  "rebaseWhen": "behind-base-branch",
+  "patch": {
+    "automerge": true
+  },
+  "semanticCommits": "enabled",
+  "semanticCommitType": "chore"
 }
